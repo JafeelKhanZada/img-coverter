@@ -14,15 +14,19 @@ app.use(
 app.get("/:id", async (req, res) => {
   const name = req?.params?.id;
   const image = await getFile(name);
-  if (image) {
-    const url = image?.split("?");
-    const img = url[0]?.split(".");
-    const ext = img[img.length - 1];
-    return imagebase64(image).then(async (base) => {
-      const webp = await get_webpbase64(base);
-      const url = `data:image/${ext};base64,${webp}`;
-      return res.status(200).json({ url });
-    });
+  try {
+    if (image) {
+      const url = image?.split("?");
+      const img = url[0]?.split(".");
+      const ext = img[img.length - 1];
+      return imagebase64(image).then(async (base) => {
+        const webp = await get_webpbase64(base);
+        const url = `data:image/${ext};base64,${webp}`;
+        return res.status(200).json({ url });
+      });
+    }
+  } catch (error) {
+    return res.status(200).json({ url: "" });
   }
 });
 function get_webpbase64(path) {
