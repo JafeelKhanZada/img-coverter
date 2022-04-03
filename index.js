@@ -13,7 +13,9 @@ app.use(
 );
 app.get("/:id", async (req, res) => {
   const name = req?.params?.id;
-  const image = await getFile(name);
+  const hash = name?.split("%23")?.join("#");
+  const slash = hash?.split("%2F")?.join("/");
+  const image = await getFile(slash);
   try {
     if (image) {
       const url = image?.split("?");
